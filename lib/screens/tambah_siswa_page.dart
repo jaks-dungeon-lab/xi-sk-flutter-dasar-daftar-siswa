@@ -1,4 +1,6 @@
+import 'package:daftar_siswa/providers/siswa_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class TambahSiswaPage extends StatefulWidget {
   const TambahSiswaPage({super.key});
@@ -89,33 +91,27 @@ class _TambahSiswaPageState extends State<TambahSiswaPage> {
               // Tombol Simpan
               ElevatedButton(
                 onPressed: () {
-                  // 4. Mengecek Status Validasi dengan aman (?.)
+                  // Mengecek Status Validasi dengan aman (?.)
                   if (_formKey.currentState?.validate() ?? false) {
-                    // Jika lolos validasi, tangkap datanya
+                    // Tangkap datanya dari TextField
                     String nama = _namaController.text;
                     String jurusan = _jurusanController.text;
                     String kelas = _kelasController.text;
 
-                    // Kita tampilkan Pop-up (Dialog)
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text('Data Diterima!'),
-                          content: Text(
-                            'Siswa baru bernama $nama dari kelas $kelas ($jurusan) siap ditambahkan ke sistem.',
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context); // Tutup pop-up
-                              },
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        );
-                      },
+                    // HAPUS kode pop-up showDialog() yang lama, kita sudah tidak butuh itu!
+
+                    // 1. MENYURUH PENYIAR UNTUK MENAMBAHKAN DATA
+                    // Menggunakan perintah .read karena kita hanya memberi instruksi satu kali tembak
+                    context.read<SiswaProvider>().tambahSiswa(
+                      nama,
+                      jurusan,
+                      kelas,
                     );
+
+                    // 2. MENUTUP HALAMAN (KEMBALI KE BERANDA)
+                    // Halaman form ditutup, dan karena beranda sudah dipasangi .watch,
+                    // otomatis list beranda akan memanjang!
+                    Navigator.pop(context);
                   }
                 },
                 child: const Text('Simpan Siswa'),
