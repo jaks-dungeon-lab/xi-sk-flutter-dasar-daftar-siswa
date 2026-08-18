@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'tambah_siswa_page.dart';
 
 void main() => runApp(const AplikasiAbsenSiswa());
 
@@ -28,8 +29,12 @@ class HalamanDaftarSiswa extends StatefulWidget {
 
 class _HalamanDaftarSiswaState extends State<HalamanDaftarSiswa> {
   final List<String> semuaSiswa = [
-    'BUDI SANTOSO', 'AYU LESTARI', 'SITI NURHALIZA',
-    'ANDI FIRMANSYAH', 'JOKO SUSILO', 'DIANA PUTRI',
+    'BUDI SANTOSO',
+    'AYU LESTARI',
+    'SITI NURHALIZA',
+    'ANDI FIRMANSYAH',
+    'JOKO SUSILO',
+    'DIANA PUTRI',
   ];
   List<String> siswaDitampilkan = [];
 
@@ -43,7 +48,9 @@ class _HalamanDaftarSiswaState extends State<HalamanDaftarSiswa> {
     setState(() {
       siswaDitampilkan = teks.isEmpty
           ? semuaSiswa
-          : semuaSiswa.where((n) => n.toLowerCase().contains(teks.toLowerCase())).toList();
+          : semuaSiswa
+                .where((n) => n.toLowerCase().contains(teks.toLowerCase()))
+                .toList();
     });
   }
 
@@ -76,14 +83,17 @@ class _HalamanDaftarSiswaState extends State<HalamanDaftarSiswa> {
               ),
             ),
           ),
-          
+
           // 2. Daftar Siswa
           Expanded(
             child: ListView.builder(
               itemCount: siswaDitampilkan.length,
               itemBuilder: (context, index) {
                 return Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   elevation: 0,
                   color: Colors.white,
                   shape: RoundedRectangleBorder(
@@ -98,10 +108,16 @@ class _HalamanDaftarSiswaState extends State<HalamanDaftarSiswa> {
                     ),
                     title: Text(
                       siswaDitampilkan[index],
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                     subtitle: Text('NIS: 102030${index + 1}  •  XI RPL 1'),
-                    trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: Colors.grey,
+                    ),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -119,13 +135,26 @@ class _HalamanDaftarSiswaState extends State<HalamanDaftarSiswa> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const TambahSiswaPage(),
+            ),
+          );
+        },
+        backgroundColor: Colors.indigo,
+        foregroundColor: Colors.white,
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
 
 class HalamanDetailSiswa extends StatelessWidget {
   final String namaSiswa;
-  
+
   const HalamanDetailSiswa({super.key, required this.namaSiswa});
 
   @override
