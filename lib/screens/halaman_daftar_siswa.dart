@@ -1,5 +1,6 @@
 import 'package:daftar_siswa/models/siswa.dart';
 import 'package:daftar_siswa/providers/siswa_provider.dart';
+import 'package:daftar_siswa/providers/tema_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'tambah_siswa_page.dart';
@@ -12,12 +13,8 @@ class HalamanDaftarSiswa extends StatefulWidget {
 }
 
 class _HalamanDaftarSiswaState extends State<HalamanDaftarSiswa> {
-  // 1. HAPUS variabel semuaSiswa dan fungsi initState yang lama!
-
-  // 2. Buat variabel baru untuk menyimpan teks pencarian (kata kunci)
   String _kataKunci = '';
 
-  // 3. Ubah fungsi cariSiswa agar HANYA menyimpan kata kunci saja
   void cariSiswa(String teks) {
     setState(() {
       _kataKunci = teks;
@@ -26,10 +23,8 @@ class _HalamanDaftarSiswaState extends State<HalamanDaftarSiswa> {
 
   @override
   Widget build(BuildContext context) {
-    // 4. MENDENGARKAN SIARAN PENYIAR
     final providerSiswa = context.watch<SiswaProvider>();
 
-    // 5. MENYARING DATA SECARA OTOMATIS
     List<Siswa> siswaDitampilkan = _kataKunci.isEmpty
         ? providerSiswa.semuaSiswa
         : providerSiswa.semuaSiswa
@@ -44,7 +39,21 @@ class _HalamanDaftarSiswaState extends State<HalamanDaftarSiswa> {
           'Buku Absen Kelas XI',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.indigo.shade50,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        actions: [
+          // Pantau status tema saat ini untuk ikon sakelarnya
+          Consumer<TemaProvider>(
+            builder: (context, temaProvider, child) {
+              return Switch(
+                value: temaProvider.isDarkMode, // Posisi sakelar (nyala/mati)
+                onChanged: (value) {
+                  // Perintah untuk mengganti tema dan menyimpannya ke memori
+                  temaProvider.gantiTema();
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -57,7 +66,9 @@ class _HalamanDaftarSiswaState extends State<HalamanDaftarSiswa> {
                 hintText: 'Cari nama siswa...',
                 prefixIcon: const Icon(Icons.search),
                 filled: true,
-                fillColor: Colors.indigo.shade50,
+                fillColor: Theme.of(
+                  context,
+                ).colorScheme.surfaceContainerHighest,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
                   borderSide: BorderSide.none,
@@ -77,10 +88,12 @@ class _HalamanDaftarSiswaState extends State<HalamanDaftarSiswa> {
                     vertical: 8,
                   ),
                   elevation: 0,
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.surface,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
-                    side: BorderSide(color: Colors.indigo.shade100),
+                    side: BorderSide(
+                      color: Theme.of(context).colorScheme.outlineVariant,
+                    ),
                   ),
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(12),
@@ -98,9 +111,9 @@ class _HalamanDaftarSiswaState extends State<HalamanDaftarSiswa> {
                     subtitle: Text(
                       'NIS: ${siswaDitampilkan[index].nis}  •  ${siswaDitampilkan[index].kelas} ${siswaDitampilkan[index].jurusan}',
                     ),
-                    trailing: const Icon(
+                    trailing: Icon(
                       Icons.chevron_right,
-                      color: Colors.grey,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                     onTap: () {
                       Navigator.push(
@@ -126,8 +139,8 @@ class _HalamanDaftarSiswaState extends State<HalamanDaftarSiswa> {
             MaterialPageRoute(builder: (context) => const TambahSiswaPage()),
           );
         },
-        backgroundColor: Colors.indigo,
-        foregroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
         child: const Icon(Icons.add),
       ),
     );
@@ -144,7 +157,7 @@ class HalamanDetailSiswa extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profil Siswa'),
-        backgroundColor: Colors.indigo.shade50,
+        backgroundColor: Theme.of(context).colorScheme.surface,
       ),
       body: Center(
         child: Column(
@@ -160,9 +173,12 @@ class HalamanDetailSiswa extends StatelessWidget {
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'Siswa Kelas XI RPL 1',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+              style: TextStyle(
+                fontSize: 16,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           ],
         ),

@@ -10,15 +10,12 @@ class TambahSiswaPage extends StatefulWidget {
 }
 
 class _TambahSiswaPageState extends State<TambahSiswaPage> {
-  // 1. Deklarasi Mandor Form
   final _formKey = GlobalKey<FormState>();
 
-  // 2. Deklarasi Controller untuk menangkap data
   final TextEditingController _namaController = TextEditingController();
   final TextEditingController _jurusanController = TextEditingController();
   final TextEditingController _kelasController = TextEditingController();
 
-  // Jangan lupa hancurkan controller demi performa!
   @override
   void dispose() {
     _namaController.dispose();
@@ -33,7 +30,6 @@ class _TambahSiswaPageState extends State<TambahSiswaPage> {
       appBar: AppBar(title: const Text('Tambah Siswa Baru')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        // 3. Bungkus semuanya dengan Form
         child: Form(
           key: _formKey,
           child: Column(
@@ -54,7 +50,7 @@ class _TambahSiswaPageState extends State<TambahSiswaPage> {
                   return null;
                 },
               ),
-              const SizedBox(height: 16), // Jarak antar kotak
+              const SizedBox(height: 16),
               // Kolom Jurusan
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -87,30 +83,21 @@ class _TambahSiswaPageState extends State<TambahSiswaPage> {
                   return null;
                 },
               ),
-              const SizedBox(height: 32), // Jarak sebelum tombol
+              const SizedBox(height: 32),
               // Tombol Simpan
               ElevatedButton(
                 onPressed: () {
-                  // Mengecek Status Validasi dengan aman (?.)
                   if (_formKey.currentState?.validate() ?? false) {
-                    // Tangkap datanya dari TextField
                     String nama = _namaController.text;
                     String jurusan = _jurusanController.text;
                     String kelas = _kelasController.text;
 
-                    // HAPUS kode pop-up showDialog() yang lama, kita sudah tidak butuh itu!
-
-                    // 1. MENYURUH PENYIAR UNTUK MENAMBAHKAN DATA
-                    // Menggunakan perintah .read karena kita hanya memberi instruksi satu kali tembak
                     context.read<SiswaProvider>().tambahSiswa(
                       nama,
                       jurusan,
                       kelas,
                     );
 
-                    // 2. MENUTUP HALAMAN (KEMBALI KE BERANDA)
-                    // Halaman form ditutup, dan karena beranda sudah dipasangi .watch,
-                    // otomatis list beranda akan memanjang!
                     Navigator.pop(context);
                   }
                 },
